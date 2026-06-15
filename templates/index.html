@@ -1,0 +1,116 @@
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+
+<h1>🛡 SECUREMAIL — Threat Analysis Dashboard</h1>
+<h3 id="scanText"></h3>
+
+<form method="POST" id="emailForm">
+
+<div id="emailContainer">
+
+<div class="emailBlock">
+<h3>Email #1</h3>
+
+<label>Sender</label>
+<input type="text" name="sender[]" required>
+
+<label>Email Content</label>
+<textarea name="email[]" rows="6" required></textarea>
+
+</div>
+
+</div>
+
+<button type="button" onclick="addEmail()">➕ Add Email</button>
+<br><br>
+<button type="submit">Start Scan</button>
+
+</form>
+
+
+{% if outputs %}
+<h2>Threat Results</h2>
+
+<table>
+<tr>
+<th>Sender</th>
+<th>Email Preview</th>
+<th>Risk Meter</th>
+<th>Status</th>
+<th>Alerts</th>
+</tr>
+
+{% for o in outputs %}
+
+<tr>
+
+<td>{{o.sender}}</td>
+
+<td>{{o.email}}</td>
+
+<td>
+<div class="riskContainer">
+<div class="riskBar" data-risk="{{o.risk}}"></div>
+</div>
+{{o.risk}}%
+</td>
+
+<td class="
+{% if o.risk >=80 %}danger
+{% elif o.risk >=50 %}warn
+{% else %}safe
+{% endif %}
+">
+{{o.result}}
+</td>
+
+<td>
+<ul>
+{% for a in o.alerts %}
+<li>{{a}}</li>
+{% endfor %}
+</ul>
+</td>
+
+</tr>
+
+{% endfor %}
+</table>
+{% endif %}
+
+</div>
+
+<script src="{{ url_for('static', filename='matrix.js') }}"></script>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+
+<script>
+let count=1;
+
+function addEmail(){
+count++;
+
+const block=document.createElement("div");
+block.className="emailBlock";
+
+block.innerHTML=`
+<h3>Email #${count}</h3>
+<label>Sender</label>
+<input type="text" name="sender[]" required>
+<label>Email Content</label>
+<textarea name="email[]" rows="6" required></textarea>
+`;
+
+document.getElementById("emailContainer").appendChild(block);
+}
+</script>
+
+</body>
+</html>
