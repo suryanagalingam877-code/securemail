@@ -84,3 +84,13 @@ securemail/
 ## License
 
 MIT License
+## Screenshots
+
+### Home Page
+
+![Home](screenshots/home.png)
+
+### Detection Result
+
+![Result](screenshots/result.png)
+
