@@ -1,11 +1,26 @@
-import whois, datetime
+import whois
+import datetime
+import socket
+
+socket.setdefaulttimeout(10)
 
 def domain_age(domain):
     try:
-        w=whois.whois(domain)
-        d=w.creation_date
-        if isinstance(d,list):
-            d=d[0]
-        return (datetime.datetime.now()-d).days
-    except:
+
+        data = whois.whois(domain)
+
+        creation = data.creation_date
+
+        if isinstance(creation, list):
+            creation = creation[0]
+
+        if not creation:
+            return None
+
+        return (
+            datetime.datetime.now() - creation
+        ).days
+
+    except Exception as e:
+        print(f"WHOIS Error: {e}")
         return None
